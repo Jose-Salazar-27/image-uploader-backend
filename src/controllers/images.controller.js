@@ -1,4 +1,5 @@
 const imageService = require('../services/images.service');
+const deleteFromDisk = require('../utilities/delete-from-disk.utilitie');
 
 const getImage = async (request, response, next) => {
   try {
@@ -12,7 +13,7 @@ const getImage = async (request, response, next) => {
 };
 
 const uploadImage = async (request, response) => {
-  const { path } = request.file;
+  const { path, destination, filename } = request.file;
 
   try {
     const uploadResult = await imageService.uploadImage(path);
@@ -25,6 +26,7 @@ const uploadImage = async (request, response) => {
 
     const query = await imageService.saveImageInfo(newDocument);
     response.send({ payload: query });
+    deleteFromDisk(destination, filename);
   } catch (error) {
     console.log(error);
     response.status(400).send({ error });

@@ -1,7 +1,14 @@
 const fs = require('fs');
 
 const deleteFromDisk = (path, fileName) => {
-  fs.readdirSync(path).forEach(file => {
+  const dir = fs.readdirSync(path);
+
+  if (!dir.includes(fileName)) {
+    console.log('Something was wrong');
+    return;
+  }
+
+  dir.forEach(file => {
     if (file === fileName) {
       console.log(`deleting file: ${file}`);
       fs.unlink(`${path}/${fileName}`, function (error) {
